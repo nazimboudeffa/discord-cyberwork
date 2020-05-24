@@ -11,17 +11,18 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.3",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "request": "^2.88.2"
   },
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nazimboudeffa/discord-work.git"
+    "url": "git+https://github.com/nazimboudeffa/discord-cyberwork.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nazimboudeffa/discord-work/issues"
+    "url": "https://github.com/nazimboudeffa/discord-cyberwork/issues"
   },
-  "homepage": "https://github.com/nazimboudeffa/discord-work#readme"
+  "homepage": "https://github.com/nazimboudeffa/discord-cyberwork#readme"
 }

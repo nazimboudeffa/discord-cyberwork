@@ -31,6 +31,8 @@ app.listen(port, function () {
 
 const prefix = 'w!';
 
+let work;
+let language = 'javascript'
 let userJoined = false;
 
 /* User joins the server */
@@ -43,21 +45,31 @@ client.on('message', (message) => {
 
     if(command === 'join'){
 
-      let work= new Work(message.author.username, client, 'work-work'); //Initilizes our work engine
+      work = new Work(message.author.username, client, 'work-work'); //Initilizes our work engine
+      let myRet = work.startWork(language);
       const embed = new Discord.MessageEmbed()
       .setTitle("Welcome to Let's Code Better Together")
       .setColor(0xFF0000)
-      .addField(`${message.author.username} has Joined`);
+      .addField(`${message.author.username} has Joined`, myRet);
       message.channel.send(embed);
       message.channel.send(`${message.author} type w!commands to see the list of commands.`);
-      return;
       userJoined = true;
+      return;
 
     }
 
     if(userJoined == true){
         if(command === 'issue'){
-          message.channel.send(work.getIssue());
+          //message.channel.send(work.getIssue(language));
+          let issue = work.getIssue(language);
+          const embed = new Discord.MessageEmbed()
+          .setTitle(issue.title)
+          .setColor(0xFF0000)
+          .addField(`URL`, issue.html_url);
+          message.channel.send(embed);
+        }
+        else if(command === 'stats'){
+          message.channel.send(work.getStats());
         }
     }
 });
