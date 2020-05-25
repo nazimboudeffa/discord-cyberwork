@@ -1,6 +1,7 @@
 require('dotenv').config();
 const Discord = require('discord.js');
 
+//const { CONFIG_TOKEN } = require('./config.json');
 const { greetings } = require('./data.json');
 
 const client = new Discord.Client();
@@ -12,8 +13,8 @@ const rp = require('request-promise');
 
 const Work = require('./work.js');
 
+//var token = CONFIG_TOKEN || process.env.TOKEN
 var token = process.env.TOKEN
-//var token = process.env.TOKEN
 var port = process.env.PORT || 3000
 
 // set the view engine to ejs
