@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-//const { CONFIG_TOKEN } = require('./config.json');
+const { CONFIG_TOKEN } = require('./config.json');
 const { greetings } = require('./data.json');
 
 const client = new Discord.Client();
@@ -12,8 +12,8 @@ const rp = require('request-promise');
 
 const Work = require('./work.js');
 
-//var token = CONFIG_TOKEN || process.env.TOKEN
-var token = process.env.TOKEN
+var token = CONFIG_TOKEN || process.env.TOKEN
+//var token = process.env.TOKEN
 var port = process.env.PORT || 3000
 
 // set the view engine to ejs
@@ -60,12 +60,58 @@ client.on('message', (message) => {
         .setColor(0xFF0000)
         .addField(`${message.author.username} has joined`, myRet);
         message.channel.send(embed);
-        message.channel.send(`${message.author} type w!commands to see the list of commands.`);
+        //message.channel.send(`${message.author} type w!commands to see the list of commands.`);
         userJoined = true;
         return;
 
       }
 
+      else if(command === 'commands'){
+
+        const exampleEmbed = {
+        	color: 0x0099ff,
+        	title: 'Work Bot Commands',
+        	url: 'https://discord-cyberwork.herokuapp.com',
+        	author: {
+        		name: 'Work Bot',
+        		icon_url: 'https://i.imgur.com/GoDjz2b.jpg',
+        		url: 'https://discord-cyberwork.herokuapp.com',
+        	},
+        	description: 'Somme commands to use to Work in Discord',
+        	thumbnail: {
+        		url: 'https://i.imgur.com/GoDjz2b.jpg',
+        	},
+        	fields: [
+            {
+              name: 'w!join language',
+              value: 'Join the GitHub language (optional)',
+            },
+        		{
+        			name: 'w!lang language',
+        			value: 'If you want to change the language (not implemented)',
+        		},
+        		{
+        			name: 'w!issue',
+        			value: 'Gets an issue on GitHub',
+        		},
+        		{
+        			name: 'w!stats',
+        			value: 'To see the stats',
+        		},
+        	],
+        	image: {
+        		url: 'https://i.imgur.com/GoDjz2b.jpg',
+        	},
+        	timestamp: new Date(),
+        	footer: {
+        		text: 'Eat, Sleep, Code',
+        		icon_url: 'https://i.imgur.com/GoDjz2b.jpg',
+        	},
+        };
+
+        message.channel.send({ embed: exampleEmbed });
+
+      }
 
       if(userJoined == true){
           if(command === 'issue'){
@@ -96,6 +142,7 @@ client.on('message', (message) => {
             })
 
           }
+
           else if(command === 'stats'){
             var options = {
               url: 'https://api.github.com/search/issues?q=language:' + encodeURIComponent(work.language) + '+state:open',
@@ -109,6 +156,12 @@ client.on('message', (message) => {
                  message.channel.send(work.getStats(body));
                }
             })
+          }
+
+          else if(command === 'leave'){
+              let tempLeave = message.author.username;
+              message.channel.send([`${tempLeave} has left the Work.`]);
+              userJoined = false;
           }
       }
     }
