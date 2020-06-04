@@ -33,7 +33,6 @@ app.listen(port, function () {
 const prefix = 'w!';
 
 let work;
-let language = 'javascript';
 let userJoined = false;
 let workChannel = 'work-work';
 
@@ -42,7 +41,7 @@ client.on('message', (message) => {
 
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    const args = message.content.slice(prefix.length).split('!');
+    const args = message.content.slice(prefix.length).split(' ');
     const command = args.shift().toLowerCase();
 
     var actualChannel = message.channel.name
@@ -53,16 +52,22 @@ client.on('message', (message) => {
 
       if(command === 'join'){
 
-        work = new Work(message.author.username, client, workChannel, language); //Initilizes our work engine
-        let myRet = work.startWork();
-        const embed = new Discord.MessageEmbed()
-        .setTitle("Welcome to Let's Code Better Together")
-        .setColor(0xFF0000)
-        .addField(`${message.author.username} has joined`, myRet);
-        message.channel.send(embed);
-        //message.channel.send(`${message.author} type w!commands to see the list of commands.`);
-        userJoined = true;
-        return;
+        if (!args.length) {
+          return message.channel.send(`Type : h!join javascript or another language like php or python, ${message.author}`);
+        } else {
+
+          work = new Work(message.author.username, client, workChannel, args[0]); //Initilizes our work engine
+          let myRet = work.startWork();
+          const embed = new Discord.MessageEmbed()
+          .setTitle("Welcome to Let's Code Better Together")
+          .setColor(0xFF0000)
+          .addField(`${message.author.username} has joined`, myRet);
+          message.channel.send(embed);
+          //message.channel.send(`${message.author} type w!commands to see the list of commands.`);
+          userJoined = true;
+          return;
+
+        }
 
       }
 
@@ -162,6 +167,25 @@ client.on('message', (message) => {
               let tempLeave = message.author.username;
               message.channel.send([`${tempLeave} has left the Work.`]);
               userJoined = false;
+          }
+
+          else if(command === 'issues'){
+            let issues
+
+            var options = {
+              url: 'https://api.github.com/search/issues?q=language:' + encodeURIComponent(work.language) + '+state:open',
+              headers: {
+                'User-Agent': 'request'
+              }
+            };
+
+            rp(options, function (error, response, body) {
+               if (!error && response.statusCode === 200) {
+                 issues = JSON.parse(body).total_count;
+                 console.log(issues);
+                 message.channel.send([`There is ${issues} open issues in ${work.language}`]);
+               }
+            })
           }
       }
     }
